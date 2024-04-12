@@ -187,7 +187,7 @@ else
 
             // add rotation animation based on time
             dot.rotation.x = t * 0.5;
-            dot.rotation.y = t * 0.3;
+            dot.rotation.y = t * 0.5;
         };
 
         renderer.render(scene, camera);
