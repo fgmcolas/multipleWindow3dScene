@@ -182,8 +182,8 @@ else
 			let dot = dots[i];
 			let win = wins[i];
 
-			dot.position.x = dot.position.x + (win.shape.w * .5);
-			dot.position.y = dot.position.y + (win.shape.h * .5);
+			dot.position.x = win.shape.x + (win.shape.w * .5);
+			dot.position.y = win.shape.y + (win.shape.h * .5);
 		};
 
 		renderer.render(scene, camera);
