@@ -6,7 +6,7 @@ const t = THREE;
 let camera, scene, renderer, world;
 let near, far;
 let pixR = window.devicePixelRatio ? window.devicePixelRatio : 1;
-let cubes = [];
+let dots = [];
 let sceneOffsetTarget = {x: 0, y: 0};
 let sceneOffset = {x: 0, y: 0};
 
@@ -105,21 +105,21 @@ else
 
 	function windowsUpdated ()
 	{
-		updateNumberOfCubes();
+		updateNumberOfDots();
 	}
 
-	function updateNumberOfCubes ()
+	function updateNumberOfDots ()
 	{
 		let wins = windowManager.getWindows();
 
-		// remove all cubes
-		cubes.forEach((c) => {
-			world.remove(c);
+		// remove all dots
+		dots.forEach((d) => {
+			world.remove(d);
 		})
 
-		cubes = [];
+		dots = [];
 
-		// add new cubes based on the current window setup
+		// add new dots based on the current window setup
 		for (let i = 0; i < wins.length; i++)
 		{
 			let win = wins[i];
@@ -128,12 +128,24 @@ else
 			c.setHSL(i * .1, 1.0, .5);
 
 			let s = 100 + i * 50;
-			let sphere = new t.Mesh(new t.SphereGeometry(s, 32, 32), new t.MeshBasicMaterial({color: c , wireframe: true}));
-			sphere.position.x = win.shape.x + (win.shape.w * .5);
-			sphere.position.y = win.shape.y + (win.shape.h * .5);
+			let dotGeometry = new t.Geometry();
+			for (let j = 0; j < 1000; j++)
+			{
+				let vertex = new t.Vector3();
+				vertex.x = Math.random() * 2 - 1;
+				vertex.y = Math.random() * 2 - 1;
+				vertex.z = Math.random() * 2 - 1;
+				vertex.normalize();
+				vertex.multiplyScalar(s);
+				dotGeometry.vertices.push(vertex);
+			}
+			let dotMaterial = new t.PointsMaterial({ color: c, size: 0.01 });
+			let dotMesh = new t.Points(dotGeometry, dotMaterial);
+			dotMesh.position.x = win.shape.x + (win.shape.w * .5);
+			dotMesh.position.y = win.shape.y + (win.shape.h * .5);
 
-			world.add(sphere);
-			cubes.push(sphere);
+			world.add(dotMesh);
+			dots.push(dotMesh);
 		}
 	}
 
@@ -164,19 +176,14 @@ else
 		let wins = windowManager.getWindows();
 
 
-		// loop through all our cubes and update their positions based on current window positions
-		for (let i = 0; i < cubes.length; i++)
+		// loop through all our dots and update their positions based on current window positions
+		for (let i = 0; i < dots.length; i++)
 		{
-			let cube = cubes[i];
+			let dot = dots[i];
 			let win = wins[i];
-			let _t = t;// + i * .2;
 
-			let posTarget = {x: win.shape.x + (win.shape.w * .5), y: win.shape.y + (win.shape.h * .5)}
-
-			cube.position.x = cube.position.x + (posTarget.x - cube.position.x) * falloff;
-			cube.position.y = cube.position.y + (posTarget.y - cube.position.y) * falloff;
-			cube.rotation.x = _t * .5;
-			cube.rotation.y = _t * .3;
+			dot.position.x = dot.position.x + (win.shape.w * .5);
+			dot.position.y = dot.position.y + (win.shape.h * .5);
 		};
 
 		renderer.render(scene, camera);
