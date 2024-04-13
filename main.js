@@ -223,13 +223,18 @@ function addWindow() {
 
     // update dots array and add new dots to the scene
     let wins = windowManager.getWindows();
+    // get the current number of dots
+    let dotCount = dots.length;
+    let lastIndex = wins.length - 1;
     // get the newly added window
-    let win = wins[wins.length - 1];
+    let win = wins[lastIndex];
 
     let c = new t.Color();
-    c.setHSL((wins.length - 1) * .3, 1.0, .5);
+    // use dotCount instead of lastIndex
+    c.setHSL(dotCount * .3, 1.0, .5);
 
-    let s = 100 + (wins.length - 1) * 50;
+    // calculate size based on the current number of dots
+    let s = 100 + dotCount * 50;
     let dotGeometry = new t.Geometry();
     for (let j = 0; j < 10000; j++) {
         let vertex = new t.Vector3();
