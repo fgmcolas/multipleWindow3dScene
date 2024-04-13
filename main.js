@@ -269,6 +269,11 @@ function removeWindow() {
 
 
 function refreshWindowBtn() {
+    // remove all windows except the first one
+    const windows = windowManager.getWindows();
+    for (let i = windows.length - 1; i > 0; i--) {
+        windowManager.removeWindow(windows[i]);
+    }
     // remove trailing slash from "multipleWindow3dScene/?clear=true"
     const url = window.location.href.replace(/\/$/, '');
     window.location.href = url + "?clear=true";
