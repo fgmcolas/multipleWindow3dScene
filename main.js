@@ -212,6 +212,8 @@ else
 
 document.getElementById("addWindowBtn").addEventListener("click", addWindow);
 document.getElementById("removeWindowBtn").addEventListener("click", removeWindow);
+document.getElementById("refreshWindowBtn").addEventListener("click", refreshWindowBtn);
+
 
 function addWindow() {
     // custom metadata for the new window
@@ -258,4 +260,11 @@ function removeWindow() {
         world.remove(dots.pop());
         windowManager.removeWindow(removedWindow);
     }
+}
+
+
+function refreshWindowBtn() {
+    // remove trailing slash from "multipleWindow3dScene/?clear=true"
+    const url = window.location.href.replace(/\/$/, '');
+    window.location.href = url + "?clear=true";
 }
