@@ -274,7 +274,12 @@ function refreshWindowBtn() {
     for (let i = windows.length - 1; i > 0; i--) {
         windowManager.removeWindow(windows[i]);
     }
-    // remove trailing slash from "multipleWindow3dScene/?clear=true"
-    const url = window.location.href.replace(/\/$/, '');
+    // remove "/index.html" from the URL if it's present
+    let url = window.location.href.replace(/\/index.html$/, '');
+
+    // remove trailing slash if present
+    url = url.replace(/\/$/, '');
+
+    // navigate to the modified URL with "?clear=true"
     window.location.href = url + "?clear=true";
 }
