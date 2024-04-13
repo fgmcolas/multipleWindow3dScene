@@ -77,7 +77,7 @@ else
         scene.background = new t.Color(0.0);
 		scene.add( camera );
 
-		renderer = new t.WebGLRenderer({antialias: true, depthBuffer: true});
+        renderer = new t.WebGLRenderer({antialias: true, depthBuffer: true});
         renderer.setPixelRatio(pixR);
 
         world = new t.Object3D();
@@ -106,6 +106,8 @@ else
 	function windowsUpdated ()
 	{
         updateNumberOfDots();
+        // render the scene after updating windows
+        render();
     }
 
 	function updateNumberOfDots ()
@@ -152,7 +154,7 @@ else
 	function updateWindowShape (easing = true)
 	{
         // storing the actual offset in a proxy that we update against in the render function
-		sceneOffsetTarget = {x: -window.screenX, y: -window.screenY};
+        sceneOffsetTarget = {x: -window.screenX, y: -window.screenY};
         if (!easing) sceneOffset = sceneOffsetTarget;
     }
 
@@ -203,6 +205,57 @@ else
 
         camera = new t.OrthographicCamera(0, width, 0, height, -10000, 10000);
         camera.updateProjectionMatrix();
-		renderer.setSize( width, height );
+        renderer.setSize( width, height );
+    }
+}
+
+
+document.getElementById("addWindowBtn").addEventListener("click", addWindow);
+document.getElementById("removeWindowBtn").addEventListener("click", removeWindow);
+
+function addWindow() {
+    // custom metadata for the new window
+    let metaData = {foo: "bar"};
+    // add a new window
+    windowManager.init(metaData);
+
+    // update dots array and add new dots to the scene
+    let wins = windowManager.getWindows();
+    // get the newly added window
+    let win = wins[wins.length - 1];
+
+    let c = new t.Color();
+    c.setHSL((wins.length - 1) * .3, 1.0, .5);
+
+    let s = 100 + (wins.length - 1) * 50;
+    let dotGeometry = new t.Geometry();
+    for (let j = 0; j < 10000; j++) {
+        let vertex = new t.Vector3();
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.normalize();
+        vertex.multiplyScalar(s);
+        dotGeometry.vertices.push(vertex);
+    }
+    let dotMaterial = new t.PointsMaterial({color: c, size: 0.01 });
+    let dotMesh = new t.Points(dotGeometry, dotMaterial);
+    dotMesh.position.x = win.shape.x + (win.shape.w * .5);
+    dotMesh.position.y = win.shape.y + (win.shape.h * .5);
+
+    world.add(dotMesh);
+    dots.push(dotMesh);
+}
+
+
+function removeWindow() {
+    let windows = windowManager.getWindows();
+    if (windows.length > 0) {
+        // remove the last window
+        let removedWindow = windows.pop();
+
+        // remove the corresponding dot from the scene
+        world.remove(dots.pop());
+        windowManager.removeWindow(removedWindow);
     }
 }
