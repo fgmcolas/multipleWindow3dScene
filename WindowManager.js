@@ -146,6 +146,14 @@ class WindowManager
 	{
 		return this.#id;
 	}
+
+	removeWindow (windowToRemove) {
+		const index = this.#windows.findIndex(window => window.id === windowToRemove.id);
+		if (index !== -1) {
+			this.#windows.splice(index, 1);
+			this.updateWindowsLocalStorage();
+		}
+	}
 }
 
 export default WindowManager;
