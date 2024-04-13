@@ -125,11 +125,11 @@ else
             let win = wins[i];
 
             let c = new t.Color();
-            c.setHSL(i * .1, 1.0, .5);
+            c.setHSL(i * .3, 1.0, .5);
 
             let s = 100 + i * 50;
             let dotGeometry = new t.Geometry();
-			for (let j = 0; j < 1000; j++)
+			for (let j = 0; j < 10000; j++)
 			{
                 let vertex = new t.Vector3();
                 vertex.x = Math.random() * 2 - 1;
